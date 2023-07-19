@@ -12,7 +12,7 @@ const App = () => {
   const [newPhone, setNewPhone] = useState('')
   const [searchName, setSearchName] = useState('')
   const [searchPerson, setSearchPerson] = useState('')
-  const [message,setMessage] = useState('hjggkjj')
+  const [message,setMessage] = useState('Random Message')
 
   useEffect(() => {
     personServices
@@ -40,7 +40,7 @@ const App = () => {
         const updatedPerson = { ...isPresent, number: newPhone }
         personServices
           .update(isPresent.id, updatedPerson)
-          .then(returnPerson => setPersons(persons.map(x => x.id != isPresent.id ? x : returnPerson)))
+          .then(returnPerson => setPersons(persons.map(x => x.id !== isPresent.id ? x : returnPerson)))
           .catch(console.log('error occur'))
         setNewName('')
         setNewPhone('')
@@ -51,7 +51,9 @@ const App = () => {
       personServices
         .create(newPerson)
         .then(returnPerson => setPersons(persons.concat(returnPerson)))
-        .catch(() => console.log("error  occur in adding "))
+        .catch(error => {
+          setMessage(`error.response.data.error+"error  occur in adding "`)
+          console.log(error.response.data.error+"error  occur in adding ")})
       setNewName('')
       setNewPhone('')
     }
@@ -68,7 +70,7 @@ const App = () => {
   }
 
   const deleteHandler = (id,name) => {
-    const updatedPeople = persons.filter(person => person.id != id)
+    const updatedPeople = persons.filter(person => person.id !== id)
     if (window.confirm(`Delete ${name}`)) {
       personServices
         .deletePeople(id)
